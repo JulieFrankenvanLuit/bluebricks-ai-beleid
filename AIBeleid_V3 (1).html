@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI binnen Blue Bricks</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bb-navy:       #222A54;
+    --bb-navy-mid:   #1A407E;
+    --bb-blue:       #185E9B;
+    --bb-cyan:       #0098D5;
+    --bb-cyan-light: #4DC0ED;
+    --bb-ice-border: #8ED2F2;
+    --bb-ice:        #EDF8FD;
+    --bb-white:      #FFFFFF;
+    --bb-gray:       #6B7B8D;
+    --bb-font:       'Source Sans 3', 'Calibri', 'Segoe UI', sans-serif;
+  }
+
+  body { font-family: var(--bb-font); color: var(--bb-navy); background: #F4F7FB; font-size: 10pt; line-height: 1.6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: var(--bb-navy); padding: 0 40px; display: flex; align-items: center; gap: 4px; height: 48px; box-shadow: 0 2px 12px rgba(34,42,84,0.2); }
+  nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 8pt; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 10px; border-radius: 3px; transition: all .2s; white-space: nowrap; }
+  nav a:hover { color: var(--bb-white); background: rgba(255,255,255,0.1); }
+  nav .nav-brand { font-size: 10pt; font-weight: 900; color: var(--bb-cyan); margin-right: auto; }
+
+  .hero { background: var(--bb-navy); color: var(--bb-white); padding: 56px 40px 48px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(0,152,213,0.18) 0%, transparent 70%); }
+  .hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-label { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--bb-cyan); margin-bottom: 14px; }
+  .hero h1 { font-size: 32pt; font-weight: 900; line-height: 1.05; letter-spacing: -0.5px; margin-bottom: 18px; }
+  .hero h1 span { color: var(--bb-cyan); }
+  .hero-lead { font-size: 11.5pt; line-height: 1.65; color: rgba(255,255,255,0.82); max-width: 640px; margin-bottom: 26px; }
+  .hero-principles { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 14px; font-size: 8.5pt; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .hero-meta { margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 8pt; color: rgba(255,255,255,0.38); }
+
+  .page { max-width: 820px; margin: 0 auto; padding: 40px 20px 60px; }
+  section { margin-bottom: 52px; }
+
+  .section-label { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--bb-cyan); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .step-badge { width: 22px; height: 22px; background: var(--bb-cyan); color: var(--bb-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; font-weight: 900; flex-shrink: 0; }
+  .section-title { font-size: 18pt; font-weight: 900; color: var(--bb-navy); margin-bottom: 6px; line-height: 1.15; }
+  .section-goal { font-size: 9.5pt; font-weight: 600; color: var(--bb-blue); margin-bottom: 14px; font-style: italic; }
+  .section-body { font-size: 10pt; line-height: 1.65; color: var(--bb-navy); margin-bottom: 16px; }
+
+  .system-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+  .system-option { border-radius: 8px; overflow: hidden; box-shadow: 0 1px 5px rgba(34,42,84,0.09); }
+  .system-option-header { padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .system-option-header.recommended { background: var(--bb-cyan); }
+  .system-option-header.other { background: var(--bb-gray); }
+  .soh-icon { font-size: 18pt; }
+  .soh-tag { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.75); margin-bottom: 2px; }
+  .soh-text h3 { font-size: 9.5pt; font-weight: 700; color: var(--bb-white); }
+  .system-option-body { background: var(--bb-white); padding: 14px 16px; font-size: 9pt; line-height: 1.55; }
+  .system-option-body a { color: var(--bb-cyan); font-weight: 600; }
+  .system-rule { margin-top: 10px; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: 700; }
+  .system-rule.ok { background: #E8F7EE; color: #1A6E3C; border-left: 3px solid #2EAA5E; }
+  .system-rule.warn { background: #FFF3E8; color: #B85B10; border-left: 3px solid #E07C2A; }
+
+  .billboard { background: var(--bb-navy); border-radius: 8px; padding: 20px 22px; margin: 20px 0; display: flex; align-items: flex-start; gap: 16px; }
+  .billboard.mid { background: var(--bb-navy-mid); }
+  .billboard-icon { font-size: 22pt; flex-shrink: 0; margin-top: 2px; }
+  .billboard-text strong { display: block; font-size: 11pt; font-weight: 700; color: var(--bb-cyan); margin-bottom: 6px; }
+  .billboard-text p { font-size: 9.5pt; line-height: 1.55; color: rgba(255,255,255,0.88); }
+
+  .two-worlds { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .world-card { border-radius: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(34,42,84,0.1); }
+  .world-header { padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+  .world-header.bb { background: var(--bb-navy); }
+  .world-header.client { background: var(--bb-blue); }
+  .world-icon { font-size: 18pt; }
+  .world-tag { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); }
+  .world-header-text h3 { font-size: 10pt; font-weight: 700; color: var(--bb-white); }
+  .world-body { background: var(--bb-ice); padding: 16px 18px; }
+  .world-body p { font-size: 9pt; line-height: 1.55; margin-bottom: 10px; }
+  .world-rule { border-radius: 0 4px 4px 0; padding: 8px 12px; font-size: 8.5pt; font-weight: 700; margin-top: 10px; }
+  .world-rule.strict { background: #FFF0ED; border-left: 3px solid #C0421A; color: #C0421A; }
+  .world-rule.check { background: var(--bb-white); border-left: 3px solid var(--bb-cyan); color: var(--bb-navy); }
+
+  .anon-table { width: 100%; border-collapse: collapse; background: var(--bb-white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(34,42,84,0.07); margin: 16px 0; font-size: 9pt; }
+  .anon-table thead tr { background: var(--bb-navy); color: var(--bb-white); }
+  .anon-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; font-size: 8.5pt; }
+  .anon-table tbody td { padding: 9px 14px; border-bottom: 1px solid var(--bb-ice-border); }
+  .anon-table tbody tr:last-child td { border-bottom: none; }
+  .anon-table tbody tr:nth-child(even) td { background: var(--bb-ice); }
+  .anon-table .before { color: #C0421A; font-weight: 600; }
+  .anon-table .after { color: #1A7E4E; font-weight: 600; }
+  .anon-table .arrow { color: var(--bb-gray); text-align: center; font-size: 11pt; width: 30px; }
+
+  .examples-block { margin: 18px 0; }
+  .examples-label { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--bb-gray); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .examples-label::before { content: ''; display: inline-block; width: 16px; height: 2px; background: var(--bb-cyan-light); border-radius: 1px; }
+  .examples-action { font-size: 9pt; font-weight: 700; color: var(--bb-navy); background: var(--bb-ice); border-left: 3px solid var(--bb-cyan); padding: 9px 12px; border-radius: 0 4px 4px 0; margin-bottom: 12px; }
+  .examples-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .example-card { background: var(--bb-white); border: 1px solid var(--bb-ice-border); border-radius: 8px; padding: 14px; position: relative; overflow: hidden; transition: box-shadow .2s, transform .15s; }
+  .example-card:hover { box-shadow: 0 4px 16px rgba(34,42,84,0.12); transform: translateY(-2px); }
+  .example-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--bb-cyan); }
+  .example-emoji { font-size: 18pt; margin-bottom: 8px; display: block; }
+  .example-card p { font-size: 8.5pt; line-height: 1.5; color: var(--bb-navy); }
+
+  .checklist { margin: 14px 0; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: var(--bb-white); border: 1px solid var(--bb-ice-border); border-radius: 6px; margin-bottom: 6px; font-size: 9pt; line-height: 1.45; }
+  .check-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--bb-ice); border: 2px solid var(--bb-cyan); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; }
+  .check-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--bb-cyan); }
+
+  .law-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+  .law-card { background: var(--bb-white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(34,42,84,0.08); }
+  .law-header { background: var(--bb-navy-mid); color: var(--bb-white); padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .law-icon { font-size: 16pt; }
+  .law-header h3 { font-size: 10pt; font-weight: 700; }
+  .law-body { padding: 14px 16px; }
+  .law-body p { font-size: 9pt; line-height: 1.55; margin-bottom: 10px; }
+  .law-examples { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+  .law-example { background: var(--bb-ice); border-radius: 6px; padding: 9px 12px; font-size: 8.5pt; line-height: 1.45; }
+  .law-link { display: inline-flex; align-items: center; gap: 5px; font-size: 8.5pt; font-weight: 600; color: var(--bb-cyan); text-decoration: none; border: 1px solid var(--bb-ice-border); border-radius: 4px; padding: 5px 10px; transition: all .2s; margin-top: 14px; }
+  .law-link:hover { background: var(--bb-ice); border-color: var(--bb-cyan); }
+
+  .community-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .comm-card { background: var(--bb-white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 5px rgba(34,42,84,0.08); }
+  .comm-header { padding: 16px; color: var(--bb-white); }
+  .comm-header.h1 { background: var(--bb-navy); }
+  .comm-header.h2 { background: var(--bb-blue); }
+  .comm-header.h3 { background: var(--bb-cyan); }
+  .ch-icon { font-size: 20pt; margin-bottom: 6px; display: block; }
+  .ch-tag { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; margin-bottom: 4px; }
+  .comm-header h3 { font-size: 10pt; font-weight: 700; line-height: 1.2; }
+  .comm-body { padding: 14px 16px; font-size: 9pt; line-height: 1.55; color: var(--bb-navy); }
+  .comm-body p { margin-bottom: 8px; }
+  .comm-body p:last-child { margin-bottom: 0; }
+  .comm-detail { background: var(--bb-ice); border-radius: 5px; padding: 7px 10px; font-size: 8.5pt; margin-top: 8px; color: var(--bb-navy); line-height: 1.4; font-weight: 600; }
+
+  .bb-footer { border-top: 1px solid #D8E5EF; padding-top: 20px; margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: var(--bb-gray); }
+  .bb-footer .bb-brand { font-weight: 900; color: var(--bb-cyan); font-size: 9pt; }
+  .divider { border: none; border-top: 1px solid #E0EAF2; margin: 28px 0; }
+
+  @media print { nav { display: none; } body { background: var(--bb-white); } .example-card:hover { box-shadow: none; transform: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Blue Bricks</div>
+  <a href="#systeem">Systeem</a>
+  <a href="#werelden">Twee werelden</a>
+  <a href="#klant">Klantregels</a>
+  <a href="#wet">Wet &amp; regelgeving</a>
+  <a href="#kwaliteit">Kwaliteit</a>
+  <a href="#community">Community</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">AI binnen Blue Bricks — Beleid &amp; richtlijnen</div>
+    <h1>Meer waarde leveren<br><span>begint hier.</span></h1>
+    <p class="hero-lead">We geloven dat AI Blue Bricks-consultants sterker maakt — niet als vervanging van je vakmanschap, maar als verlengstuk ervan. Juist omdat we die ambitie serieus nemen, zijn er heldere afspraken. Dit document geeft je het kader om AI veilig en effectief in te zetten: zodat je sneller werkt, scherpere analyses maakt en klanten verrast met wat mogelijk is.</p>
+    <div class="hero-principles">
+      <div class="hero-pill">✦ Innovatie stimuleren</div>
+      <div class="hero-pill">✦ Veiligheid voorop</div>
+      <div class="hero-pill">✦ Kennis delen</div>
+      <div class="hero-pill">✦ Kritisch blijven</div>
+    </div>
+    <div class="hero-meta">Versie Q2 2025 &nbsp;·&nbsp; Laatste update mei 2025 &nbsp;·&nbsp; Blue Bricks AI-expertisegebied</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <section id="systeem">
+    <div class="section-label"><div class="step-badge">1</div>Welk systeem gebruik je?</div>
+    <h2 class="section-title">Kies je startpunt bewust</h2>
+    <p class="section-goal">Het systeem dat je kiest bepaalt of jouw data veilig is — nog voordat je de eerste prompt hebt ingetypt.</p>
+    <p class="section-body">Niet elk AI-systeem gaat hetzelfde om met jouw input. Sommige tools gebruiken wat jij invoert om hun model te verbeteren. Blue Bricks heeft daarom één aanbevolen systeem en één harde eis voor al het andere.</p>
+
+    <div class="system-split">
+      <div class="system-option">
+        <div class="system-option-header recommended">
+          <div class="soh-icon">✅</div>
+          <div class="soh-text"><div class="soh-tag">Aanbevolen standaard</div><h3>Blue Bricks Claude Teams-account</h3></div>
+        </div>
+        <div class="system-option-body">
+          <p>Gesprekken worden niet gebruikt voor modeltraining. Data blijft binnen de beveiligde omgeving van Anthropic. Dit is de veiligste en meest praktische keuze voor dagelijks werk.</p>
+          <p style="margin-top:8px;">Geen toegang nog? Neem contact op via de <a href="#">AI-hub op SharePoint</a>.</p>
+          <div class="system-rule ok">Gebruik dit als startpunt, altijd</div>
+        </div>
+      </div>
+      <div class="system-option">
+        <div class="system-option-header other">
+          <div class="soh-icon">⚠️</div>
+          <div class="soh-text"><div class="soh-tag">Ander systeem</div><h3>ChatGPT, Gemini of andere tools</h3></div>
+        </div>
+        <div class="system-option-body">
+          <p>Heb je een goede reden om een ander systeem te gebruiken? Zet dan altijd als eerste stap de optie "trainen op jouw data" uit. Zonder die instelling kan jouw input worden gebruikt om het model te verbeteren.</p>
+          <p style="margin-top:8px;">Hoe je dat doet verschilt per tool — zoek het op voordat je begint.</p>
+          <div class="system-rule warn">Trainingsoptie uit — dan pas beginnen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="examples-label">Wanneer speelt dit? Herken je dit?</div>
+      <div class="examples-action">Controleer in al deze gevallen eerst de instelling — dan pas beginnen.</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">📱</span><p>Je ziet op LinkedIn een slimme nieuwe AI-tool en wil hem snel uitproberen voor een offerte die je schrijft.</p></div>
+        <div class="example-card"><span class="example-emoji">💻</span><p>Je werkt op een klantlocatie en gebruikt een AI-tool die geïntegreerd is in hun omgeving — je weet niet zeker of die jouw input opslaat.</p></div>
+        <div class="example-card"><span class="example-emoji">⚡</span><p>Je hebt je Blue Bricks-account even niet bij de hand en opent snel de gratis versie van ChatGPT voor een snelle vraag.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="werelden">
+    <div class="section-label"><div class="step-badge">2</div>Twee werelden</div>
+    <h2 class="section-title">Jouw Blue Bricks-laptop vs. de klantomgeving</h2>
+    <p class="section-goal">Dit is het meest kritieke onderscheid in dit document. De omgeving waarin je werkt bepaalt welke regels gelden voor klantdata.</p>
+    <p class="section-body">Als consultant beweeg je je dagelijks in twee omgevingen. In de ene verlaat data de klantorganisatie zodra je iets invoert. In de andere niet. Weten welke wereld je in zit is de eerste vraag die je jezelf moet stellen.</p>
+
+    <div class="two-worlds">
+      <div class="world-card">
+        <div class="world-header bb">
+          <div class="world-icon">💼</div>
+          <div class="world-header-text"><div class="world-tag">Wereld 1</div><h3>Jouw Blue Bricks-laptop</h3></div>
+        </div>
+        <div class="world-body">
+          <p>Als jij inlogt op Claude.ai, ChatGPT of een vergelijkbare tool via jouw eigen account, verwerk je data buiten de beveiligde omgeving van de klant. Klantdata mag je hier nooit direct invoeren.</p>
+          <p>Wil je toch AI inzetten voor een klantgerelateerde taak? Dan moet je de input eerst anonimiseren — zie de tabel hieronder.</p>
+          <div class="world-rule strict">Klantdata nooit direct invoeren — eerst anonimiseren</div>
+        </div>
+      </div>
+      <div class="world-card">
+        <div class="world-header client">
+          <div class="world-icon">🏢</div>
+          <div class="world-header-text"><div class="world-tag">Wereld 2</div><h3>Copilot bij de klant</h3></div>
+        </div>
+        <div class="world-body">
+          <p>Sommige klanten gebruiken Microsoft Copilot in hun eigen Microsoft 365-omgeving. Data blijft dan binnen de tenant van de klant — vergelijkbaar met hoe hun eigen documenten worden opgeslagen.</p>
+          <p>Dit mag je gebruiken voor klantdata, maar uitsluitend als de klant dit expliciet heeft goedgekeurd voor consultants én het gebruik aantoonbaar binnen hun tenant plaatsvindt.</p>
+          <div class="world-rule check">Twijfel? Vraag het na bij de klant of projectleider — vóór je begint</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:12pt; font-weight:700; margin: 22px 0 8px;">Hoe anonimiseer je?</h3>
+    <p class="section-body" style="margin-bottom:12px;">De bedrijfsnaam op zichzelf is doorgaans geen probleem — het gaat om de combinatie van informatie die iets herleidbaar of vertrouwelijk maakt. Vervang wat specifiek, persoonlijk of strategisch gevoelig is.</p>
+
+    <table class="anon-table">
+      <thead><tr><th>Wat je hebt</th><th class="arrow"></th><th>Wat je invoert</th></tr></thead>
+      <tbody>
+        <tr><td class="before">Jan de Vries zegt dat de afdeling slecht functioneert</td><td class="arrow">→</td><td class="after">Het afdelingshoofd geeft aan dat de afdeling slecht functioneert</td></tr>
+        <tr><td class="before">Drie afdelingen worden samengevoegd; twintig functies vervallen</td><td class="arrow">→</td><td class="after">Een structuurwijziging met impact op meerdere teams</td></tr>
+        <tr><td class="before">Het budget is €4,2 miljoen, 38% boven de begroting</td><td class="arrow">→</td><td class="after">Het budget ligt circa 38% boven de begroting</td></tr>
+        <tr><td class="before">De directeur weet nog niet dat zijn rol vervalt</td><td class="arrow">→</td><td class="after">Een leidinggevende is nog niet geïnformeerd over de structuurwijziging</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-block">
+      <div class="examples-label">Herken je dit uit jouw praktijk?</div>
+      <div class="examples-action">In al deze situaties: anonimiseer eerst zoals in de tabel hierboven — dan pas invoeren.</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">🎙️</span><p>Je maakt een samenvatting van interviewverslagen uit een cultuurmeting. Daarin staan namen van medewerkers die iets hebben gezegd over hun leidinggevende.</p></div>
+        <div class="example-card"><span class="example-emoji">📊</span><p>Je vraagt AI om je te helpen bij een stakeholderanalyse op basis van interne vergadernotities met namen, posities en gevoelige uitspraken.</p></div>
+        <div class="example-card"><span class="example-emoji">📋</span><p>Je werkt aan een veranderplan met specifieke financiële onderbouwing rechtstreeks uit de boekhouding van de klant.</p></div>
+      </div>
+    </div>
+
+    <div class="examples-block" style="margin-top:6px;">
+      <div class="examples-label">Herken je dit bij Copilot?</div>
+      <div class="examples-action">In al deze gevallen: controleer eerst of de klant dit gebruik heeft goedgekeurd voor externe consultants — dan pas beginnen.</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">🏛️</span><p>Een gemeente heeft Microsoft 365 Copilot uitgerold en vraagt je of je het wilt gebruiken om vergaderverslagen te maken in Teams.</p></div>
+        <div class="example-card"><span class="example-emoji">🏥</span><p>Een klant in de zorg heeft Copilot in Word geactiveerd en je gebruikt het om een beleidsnotitie te structureren op basis van interne documenten.</p></div>
+        <div class="example-card"><span class="example-emoji">📧</span><p>Je gebruikt Copilot in Outlook op het netwerk van de klant om lange e-mailthreads samen te vatten voor een statusupdate.</p></div>
+      </div>
+    </div>
+
+    <div class="billboard" style="margin-top:22px;">
+      <div class="billboard-icon">🪧</div>
+      <div class="billboard-text">
+        <strong>De vuistregel voor alle situaties</strong>
+        <p>Wat je in een AI-tool invoert, zou je ook op een billboard kunnen hangen. Als je dat niet zou willen, voer je het niet in.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="klant">
+    <div class="section-label"><div class="step-badge">3</div>Klantregels</div>
+    <h2 class="section-title">Richtlijnen van de klant hebben altijd voorrang</h2>
+    <p class="section-goal">Ook als jouw Blue Bricks-tool veiliger is — als de klant het niet toestaat, gebruik je het niet.</p>
+    <p class="section-body">Als consultant bij een klant ben je ook gebonden aan hun regels. Die hebben altijd voorrang op de richtlijnen van Blue Bricks. Bij een conflict volg je de meest restrictieve variant.</p>
+
+    <div class="checklist">
+      <div class="check-item"><div class="check-dot"></div><span>Controleer welke AI-tools de klant heeft goedgekeurd — vóórdat je ze inzet</span></div>
+      <div class="check-item"><div class="check-dot"></div><span>Gebruik uitsluitend tools die expliciet zijn toegestaan op de klantlocatie of binnen het klantnetwerk</span></div>
+      <div class="check-item"><div class="check-dot"></div><span>Bij conflict tussen Blue Bricks-richtlijnen en klantrichtlijnen: volg de meest restrictieve variant</span></div>
+      <div class="check-item"><div class="check-dot"></div><span>Onduidelijkheden? Leg ze altijd voor aan je projectleider.</span></div>
+    </div>
+
+    <div class="examples-block">
+      <div class="examples-label">Dit speelt vaker dan je denkt</div>
+      <div class="examples-action">Kom je zo'n situatie tegen? Vraag het na bij je projectleider vóór je AI inzet. Leg onduidelijkheden altijd voor.</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">🏦</span><p>Een groot financieel bedrijf staat geen gebruik van externe AI-tools toe op het bedrijfsnetwerk — ook niet als je een veilig Blue Bricks-account hebt.</p></div>
+        <div class="example-card"><span class="example-emoji">🏛️</span><p>Een overheidsorganisatie heeft een lijst van goedgekeurde tools en Claude staat daar (nog) niet op.</p></div>
+        <div class="example-card"><span class="example-emoji">🏥</span><p>Een zorginstelling heeft aanvullende privacyvereisten rond patiëntgerelateerde informatie die verder gaan dan de standaard AVG.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="wet">
+    <div class="section-label"><div class="step-badge">4</div>Wet- en regelgeving</div>
+    <h2 class="section-title">AVG en EU AI Act</h2>
+    <p class="section-goal">Dit zijn geen abstracte wetten. Ze bepalen concreet wat je wel en niet mag doen met de data die je dagelijks tegenkomt.</p>
+
+    <div class="law-cards">
+      <div class="law-card">
+        <div class="law-header"><div class="law-icon">🔐</div><h3>AVG</h3></div>
+        <div class="law-body">
+          <p>AI-gebruik valt onder de Algemene Verordening Gegevensbescherming. Verwerk geen persoonsgegevens in AI-tools zonder geldige grondslag. Gebruik geen namen, BSN-nummers, e-mailadressen of andere identificerende informatie van derden in prompts.</p>
+          <div class="examples-label" style="margin-top:14px;">Herken je dit?</div>
+          <div class="examples-action" style="font-size:8.5pt; margin-bottom:10px;">Anonimiseer eerst zoals beschreven in stap 2, of vraag bij je projectleider na of er een geldige grondslag is.</div>
+          <div class="law-examples">
+            <div class="law-example">📝 Je voert een 360-graden-feedbackrapport in om een samenvatting te laten maken — daarin staan namen en beoordelingen van medewerkers.</div>
+            <div class="law-example">📊 Je vraagt AI om een analyse te maken van medewerkerstevredenheidscijfers uit een survey waarbij respondenten anoniem zouden blijven.</div>
+            <div class="law-example">📋 Je hebt een Excel met contactgegevens van stakeholders en vraagt AI om daar een communicatieplan op te baseren.</div>
+          </div>
+        </div>
+      </div>
+      <div class="law-card">
+        <div class="law-header"><div class="law-icon">⚖️</div><h3>EU AI Act</h3></div>
+        <div class="law-body">
+          <p>Sinds augustus 2024 is de EU AI Act van kracht. Gebruik geen AI voor hoog-risicotoepassingen zonder goedkeuring, wees transparant naar klanten wanneer je AI-gegenereerde output gebruikt in adviezen en zorg dat menselijke controle altijd gewaarborgd blijft.</p>
+          <div class="examples-label" style="margin-top:14px;">Herken je dit?</div>
+          <div class="examples-action" style="font-size:8.5pt; margin-bottom:10px;">Benoem richting de klant dat AI is ingezet. Twijfel over hoog-risicogebruik? Leg het voor aan je projectleider.</div>
+          <div class="law-examples">
+            <div class="law-example">📄 Je gebruikt AI om een adviesrapport te schrijven dat de klant gebruikt als basis voor een reorganisatiebesluit — vermeld dan dat AI is ingezet.</div>
+            <div class="law-example">👥 Je helpt een klant die AI wil inzetten om cv's te screenen of medewerkers te beoordelen — dit valt onder hoog-risicogebruik.</div>
+            <div class="law-example">📊 Je presenteert een door AI gegenereerde stakeholderanalyse zonder te vermelden dat AI is ingezet — dat is in strijd met de transparantievereisten.</div>
+          </div>
+          <a href="https://www.digitaleoverheid.nl/overzicht-van-alle-onderwerpen/artificiele-intelligentie-ai/ai-verordening/" target="_blank" class="law-link">📖 Lees een toegankelijke samenvatting van de AI Act →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="kwaliteit">
+    <div class="section-label"><div class="step-badge">5</div>Kwaliteit</div>
+    <h2 class="section-title">Jij blijft de professional</h2>
+    <p class="section-goal">AI levert een concept. Jij levert het oordeel. De eindverantwoordelijkheid ligt altijd bij jou.</p>
+    <p class="section-body">Controleer AI-output altijd op juistheid en volledigheid voordat je het gebruikt of deelt. Wees je bewust van mogelijke bias in AI-systemen. Valideer belangrijke output met een collega.</p>
+
+    <div class="examples-block">
+      <div class="examples-label">Herken je dit?</div>
+      <div class="examples-action">Check in al deze gevallen de output zorgvuldig voordat je het deelt — en bespreek het eventueel met een collega.</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">📝</span><p>AI geeft een vlot geschreven samenvatting van een complex beleidsdomein, maar heeft een cruciale nuance gemist die jij als consultant wel ziet.</p></div>
+        <div class="example-card"><span class="example-emoji">🗺️</span><p>AI stelt in een stakeholderanalyse dat een bepaalde partij weinig invloed heeft, terwijl jij weet dat die informeel juist bepalend is.</p></div>
+        <div class="example-card"><span class="example-emoji">📅</span><p>AI genereert een projectplanning die er logisch uitziet, maar geen rekening houdt met de politieke realiteit bij de klant.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="community">
+    <div class="section-label">Leren &amp; delen</div>
+    <h2 class="section-title">Drie plekken. Elk met een eigen rol.</h2>
+    <p class="section-goal">Het AI-expertisegebied heeft bewust gekozen voor verschillende kanalen — elk met een duidelijk doel. Gebruik ze op de manier waarvoor ze bedoeld zijn.</p>
+
+    <div class="community-grid">
+      <div class="comm-card">
+        <div class="comm-header h1">
+          <span class="ch-icon">📚</span>
+          <div class="ch-tag">Voor diepgang en inhoud</div>
+          <h3>AI-hub op SharePoint</h3>
+        </div>
+        <div class="comm-body">
+          <p>Hier plaatst het AI-expertisegebied richtlijnen, updates en communicatie. Ook vind je hier wat Blue Bricks doet voor en met klanten op het gebied van AI.</p>
+          <p>Wil je meer weten over wat het expertisegebied levert, of ben je op zoek naar diepgaandere informatie? Dit is de plek.</p>
+          <div class="comm-detail">Richtlijnen, updates en materiaal vanuit het AI-expertisegebied</div>
+        </div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-header h2">
+          <span class="ch-icon">💬</span>
+          <div class="ch-tag">Voor peer learning</div>
+          <h3>AI-community op Teams</h3>
+        </div>
+        <div class="comm-body">
+          <p>Dit is de plek waar Brickers ervaringen, tips en ontdekkingen met elkaar delen. Niet top-down, maar van collega tot collega.</p>
+          <p>Stel vragen, deel wat werkt en leer van wat anderen tegenkomen in hun dagelijkse werk met AI.</p>
+          <div class="comm-detail">Ervaringen delen, vragen stellen en leren van elkaar</div>
+        </div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-header h3">
+          <span class="ch-icon">🤝</span>
+          <div class="ch-tag">Voor hulp en begeleiding</div>
+          <h3>AI-expertisegebied</h3>
+        </div>
+        <div class="comm-body">
+          <p>Het AI-expertisegebied biedt training en webinars en is er om je te helpen. Heb je een vraag die verder gaat dan de community? Kom gerust langs.</p>
+          <p>Ook voor vragen over AVG, de AI Act of het gebruik van AI bij klanten ben je hier aan het juiste adres.</p>
+          <div class="comm-detail">Training, webinars en persoonlijke ondersteuning</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="examples-label">Wat vind je in de community op Teams?</div>
+      <div class="examples-grid">
+        <div class="example-card"><span class="example-emoji">💡</span><p>Een collega deelt een aanpak om veranderplannen sneller te structureren met AI — inclusief de prompttekst die werkt.</p></div>
+        <div class="example-card"><span class="example-emoji">🧪</span><p>Iemand koppelt terug wat wel en niet werkte bij een klantdemo, zodat jij niet dezelfde valkuilen tegenkomt.</p></div>
+        <div class="example-card"><span class="example-emoji">🔍</span><p>Een Bricker deelt een handige aanpak voor het samenvatten van lange beleidsdocumenten in begrijpelijke taal voor de klant.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bb-footer">
+    <div>Blue Bricks &nbsp;·&nbsp; Steekterweg 51/53, 2407 BE Alphen aan den Rijn &nbsp;·&nbsp; 085 049 9407</div>
+    <div class="bb-brand">Blue Bricks</div>
+  </div>
+
+</div>
+</body>
+</html>
